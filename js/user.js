@@ -133,7 +133,6 @@ const createPostAnswerLink = () => {
 		}
 		let id = document.getElementById('question-returned').getAttribute('questionid');
 		postAnswerHelper(id);
-		questionThread(id);
 	})
 }
 
@@ -146,7 +145,6 @@ const acceptAnswerLink = () => {
 			let qid = e.target.getAttribute('questionid');
 			let aid = e.target.getAttribute('answerid');
 			acceptAnswerHandler(qid, aid);
-			questionThread(qid);
 		})
 	})
 }
@@ -164,6 +162,7 @@ const acceptAnswerHandler = (qid, aid) => {
 	.then((response) => {
 		response.json()
 		.then((data) => {
+			questionThread(qid);
 			modal.style.display = "block";
 			return document.getElementById('modal-info-panel').innerHTML = data.msg;
 		})
@@ -191,6 +190,7 @@ const postAnswerHelper = (id) => {
 				modal.style.display = "block";
 				document.getElementById('modal-info-panel').innerHTML = data.msg;
 			} else {
+				questionThread(id);
 				modal.style.display = "block";
 				document.getElementById('modal-info-panel').innerHTML = data.msg;
 			}
@@ -279,6 +279,50 @@ recentQ.addEventListener('click', (e) => {
 	getAllQuestions();
 })
 
+//Search handler
+searcher.addEventListener('keyup', (e) => {
+	e.preventDefault();
+	if (e.keyCode === 13) {
+		modal.style.display = "block";
+		document.getElementById('modal-info-panel').innerHTML = 'Searching for....' + e.target.value;
+		fetch('https://nvc-stackqa.herokuapp.com/api/v1/questions', {
+		  method: 'get',
+		  headers: {
+		  	Accept: 'application/json',
+		  	Authorization: `header ${localStorage.getItem('jwtoken')}`
+		  }
+	  })
+		.then(response => {
+	    response.json()
+	    .then((data) => {
+	      let found = data.qstack.reverse();	      
+	      let questionList = '';
+	      let foundArray = [];
+	      found.map(qobj => {
+	      	if(
+	      		qobj.question
+	      		.toLowerCase()
+	      		.indexOf(e.target.value.toLowerCase()) !== -1
+	      		) {
+	      		foundArray.push(qobj);
+	      	}
+	      })
+	      if (foundArray.length > 0) {
+					document.getElementById('modal-info-panel').innerHTML = 'Found ' + foundArray.length + ' question(s) with the key word: ' + e.target.value;
+					foundArray.map(question => {
+		      	 questionList += makeQuestion(question);
+		      })
+		      mainContent.innerHTML = questionList;
+		      createLinkHandlers();
+      		deleteQuestionHook();
+	      } else {
+	      	document.getElementById('modal-info-panel').innerHTML = 'Couldnt find ...' + e.target.value;
+	      }      
+	    });
+		})
+		.catch(err => console.log(err))
+	}
+})
 
 // add question dialog handler
 addQ.addEventListener('click', (e) => {
@@ -310,7 +354,6 @@ addQ.addEventListener('click', (e) => {
 			return document.getElementById('modal-info-panel').innerHTML = 'Empty question cannot be submitted';
 		}
 		postQuestionHandler(document.getElementById('form-question-input').value);
-		getAllQuestions();
 		})
 	})
 
@@ -331,8 +374,8 @@ const postQuestionHandler = (qentry) => {
 		response.json()
 		.then((data) => {
 			modal.style.display = "block";
-			return document.getElementById('modal-info-panel').innerHTML = data.msg;
 			getAllQuestions();
+			return document.getElementById('modal-info-panel').innerHTML = data.msg;
 		})
 		.catch(err => console.log(err));
 	});
