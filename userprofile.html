@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+        <link rel="shortcut icon" href="./assets/picture1.png">
+        <title>StackOverflow-Lite</title>
+        <link rel="stylesheet" href="./css/profilestyle.css">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0">
+    </head>
+    <body>
+        <div id="container">
+            <div id="title-bar">
+                <div class="logo-name">
+                    <img src="./assets/picture1.png" alt="" id="logo">
+                    <a class="siteName" href="./index.html">StackOverflow-Lite</a>
+                </div>
+                <div class="search-box">
+                    <form method="post" action="#" name="SearchForm">
+                        <input id="search-input" type="text" name="keyword" placeholder="Find Question..." />
+                    </form>
+                </div>
+                <div id="profile">
+                    <a href="./user.html">Home</a>
+                    <a id="logout-link" href="#">Logout</a>
+                </div>
+            </div>
+            <div id="main-content-area">
+                <div id="main-content-container">
+                    <div id="profile-panel">
+                        <h1>Profile:</h1>
+                        <div id="profile-holder">
+                            <img src="./assets/avatar.png" alt="avatar" class="avatar">
+                            <div id="user-info">
+                                <p>Username: Kevin</p>
+                                <p>Email: newuser@stackOfL.com</p>
+                                <p>No of questions asked: 3</p>
+                                <p>No of question answered: 2</p>
+                            </div>
+                        </div>
+                        <div id="user-pecks">
+                            <a href="./myquestions.html">See your questions<a>
+                            <br>
+                            <a href="./answered.html">See questions you answered</a>
+                            <br>
+                            <a href="./thread.html">See question with the most answers</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+             &copy; Copyright 2018. <a href="https://nweze-stackoverflow.herokuapp.com/">stackoverflow-Lite</a>
+        </div>
+        <script src="./js/userprofile.js"></script>
+    </body>
+</html>
